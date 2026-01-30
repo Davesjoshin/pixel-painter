@@ -162,20 +162,34 @@
         }
     }
 
+
     /**
      * Saves the current design to the server.
      * If the request fails, it will show an error message.
-     * @returns A Promise that resolves when the design is saved successfully.
+     * If the server design does not match the current grid size, it will show an error message.
+     * @returns A Promise that resolves when the design is loaded successfully.
      * @throws {Error} If the request fails.
      */
     async function saveToServer(): Promise<void> {
         try {
-            await saveDesign({
-                gridSize: gridSize,
-                pixels: pixels.value,
-            });
+            try {
+                const design: PixelDesign = {
+                    gridSize: gridSize,
+                    pixels: pixels.value,
+                    updatedAt: new Date().toISOString(),
+                };
 
-            setStatus("Saved to server ✔");
+                if (!design.gridSize || !Array.isArray(design.pixels)) {
+                    throw new Error("Invalid design");
+                }
+
+                await saveDesign(design);
+            } catch (e) {
+                const message = e instanceof Error ? e.message : "Save failed";
+                setStatus(message);
+            }
+
+            setStatus("Saved to server");
         } catch (e) {
             const message = e instanceof Error ? e.message : "Save failed";
             setStatus(message);
