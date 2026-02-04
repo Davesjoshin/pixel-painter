@@ -1,7 +1,9 @@
 <template>
     <div class="app">
         <div class="card">
-            <h1>Pixel Painter</h1>
+            <h1 class="text-4xl font-bold text-green-400">
+                Pixel Painter
+            </h1>
             <p class="muted">
                 Left-click paints
                 Right-click erases
